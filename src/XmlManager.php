@@ -8,7 +8,7 @@ class XmlManager
 {
 
     /**
-     * Объединение отчтётов перезапуска зафеленых тестов и всех тестов.
+     * Объединение отчётов с перезаписью результов тестов.
      *
      * @param $mainFile
      * @param $file
@@ -111,6 +111,10 @@ class XmlManager
     }
 
 
+    /**
+     * @param \DOMElement $resulted
+     * @param \DOMElement $current
+     */
     protected function mergeSuites(\DOMElement $resulted, \DOMElement $current)
     {
         foreach (['tests', 'assertions', 'failures', 'errors'] as $attr) {
