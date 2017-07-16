@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<testsuites>
+    <testsuite>
+        <testcase file="AdvertEditCest.php" name="editAdvertValues"/>
+        <testcase file="ClaimCest.php" name="deleteAdvertByClaim"/>
+        <testcase file="ClaimCest.php" name="sendToPocket"/>
+    </testsuite>
+</testsuites>

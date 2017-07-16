@@ -1,4 +1,5 @@
 <?php
+
 namespace JunitReports;
 
 use JunitReports\Exception\XmlException;
@@ -17,9 +18,9 @@ class XmlManager
     public function mergeWithReplace($mainFile, $file)
     {
         // достаём имена перезапущенных тестов
-        $testsDocument = $this->loadXmlFile($file);
+        $reportDocument = $this->loadXmlFile($file);
 
-        $suiteNodes       = (new \DOMXPath($testsDocument))->query('//testsuites/testsuite/testcase');
+        $suiteNodes          = (new \DOMXPath($reportDocument))->query('//testsuites/testsuite/testcase');
         $testsToReplaceNames = [];
         foreach ($suiteNodes as $suiteNode) {
             /** @var $suiteNode \DOMElement  * */
@@ -30,10 +31,9 @@ class XmlManager
             throw new XmlException('No tests reports to merge');
         }
 
-
         // remove existed tests records
-        $allTestsDocument = $this->loadXmlFile($mainFile);
-        $suiteNodes       = (new \DOMXPath($allTestsDocument))->query('//testsuites/testsuite/testcase');
+        $allTestsReportDocument = $this->loadXmlFile($mainFile);
+        $suiteNodes             = (new \DOMXPath($allTestsReportDocument))->query('//testsuites/testsuite/testcase');
 
         foreach ($suiteNodes as $suiteNode) {
             if (in_array($suiteNode->getAttribute("name"), $testsToReplaceNames)) {
@@ -41,9 +41,27 @@ class XmlManager
             }
         }
 
-        $allTestsDocument->save($mainFile);
+        $allTestsReportDocument->save($mainFile);
 
         $this->merge($mainFile, $file);
+    }
+
+    /**
+     * @param string $file
+     *
+     * @return array
+     */
+    public function getFailedTests($file)
+    {
+        $document   = $this->loadXmlFile($file);
+        $suiteNodes = (new \DOMXPath($document))->query('//testsuites/testsuite/testcase/failure');
+        $result     = [];
+
+        foreach ($suiteNodes as $suiteNode) {
+            $result[] = $suiteNode->parentNode->getAttribute('file') . ':' . $suiteNode->parentNode->getAttribute('name');
+        }
+
+        return $result;
     }
 
     /**
@@ -90,7 +108,6 @@ class XmlManager
         }
 
         $resultDocument->save($resultFile);
-        //$this->printTaskInfo("File <info>{$this->dst}</info> saved. " . count($resultNodes) . ' suites added');
     }
 
 

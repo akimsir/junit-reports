@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<testsuites>
+    <testsuite>
+        <testcase file="AdvertEditCest.php" name="editAdvertValues">
+            <failure type="PHPUnit_Framework_ExpectationFailedException">
+                Error
+            </failure>
+        </testcase>
+        <testcase file="ClaimCest.php" name="deleteAdvertByClaim">
+            <failure type="PHPUnit_Framework_ExpectationFailedException">
+                Error
+            </failure>
+        </testcase>
+        <testcase file="ClaimCest.php" name="sendToPocket"/>
+    </testsuite>
+</testsuites>
