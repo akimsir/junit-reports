@@ -1,66 +1,49 @@
 <?php
+namespace JunitReports;
 
-class Xml
+use JunitReports\Exception\XmlException;
+
+class XmlManager
 {
-
-    protected $reRunnedTestsReport;
-
-    protected $allTestsReport;
 
     /**
      * Объединение отчтётов перезапуска зафеленых тестов и всех тестов.
      *
-     * @throws Exception
+     * @param $mainFile
+     * @param $file
+     *
+     * @throws XmlException
      */
-    protected function mergeFailedTestsReports()
+    public function mergeWithReplace($mainFile, $file)
     {
-        if (!file_exists($this->reRunnedTestsReport)) {
-            // если отчётов по зафейленым тестам нет ничего не делаем
-            $this->say('Failed tests report not exist');
-
-            return;
-        } else {
-            $this->say('Exist failed tests report - try to merge with all');
-        }
-
-        //!!!
-
-
         // достаём имена перезапущенных тестов
-        $filedTestsDocument = $this->loadXmlFile($this->reRunnedTestsReport);
+        $testsDocument = $this->loadXmlFile($file);
 
-        $suiteNodes       = (new \DOMXPath($filedTestsDocument))->query('//testsuites/testsuite/testcase');
-        $failedTestsNames = [];
+        $suiteNodes       = (new \DOMXPath($testsDocument))->query('//testsuites/testsuite/testcase');
+        $testsToReplaceNames = [];
         foreach ($suiteNodes as $suiteNode) {
             /** @var $suiteNode \DOMElement  * */
-            $failedTestsNames[] = $suiteNode->getAttribute('name');
+            $testsToReplaceNames[] = $suiteNode->getAttribute('name');
         }
 
-        if (empty($failedTestsNames)) {
-            $this->say('No tests reports to merge');
-
-            return;
+        if (empty($testsToReplaceNames)) {
+            throw new XmlException('No tests reports to merge');
         }
 
 
-        // выпиливаем из отчёта по тестам все тесты, которые перезапускались
-        $allTestsDocument = $this->loadXmlFile($this->allTestsReport);
+        // remove existed tests records
+        $allTestsDocument = $this->loadXmlFile($mainFile);
         $suiteNodes       = (new \DOMXPath($allTestsDocument))->query('//testsuites/testsuite/testcase');
 
         foreach ($suiteNodes as $suiteNode) {
-            if (in_array($suiteNode->getAttribute("name"), $failedTestsNames)) {
+            if (in_array($suiteNode->getAttribute("name"), $testsToReplaceNames)) {
                 $suiteNode->parentNode->removeChild($suiteNode);
             }
         }
 
-        $allTestsDocument->save($this->allTestsReport);
+        $allTestsDocument->save($mainFile);
 
-        // смержим перезапущенные тесты
-
-        $this->merge($this->allTestsReport, $this->reRunnedTestsReport);
-
-
-        // $this->say('Done: failed test merged with all');
+        $this->merge($mainFile, $file);
     }
 
     /**
@@ -132,19 +115,19 @@ class Xml
     /**
      * @param $file
      *
-     * @return DOMDocument
-     * @throws Exception
+     * @return \DOMDocument
+     * @throws XmlException
      */
     protected function loadXmlFile($file)
     {
-        $document = new \DOMDocument();
-
         if (!file_exists($file)) {
-            throw new \Exception('File "' . $file . '" does not exist');
+            throw new XmlException('File "' . $file . '" does not exist');
         }
 
+        $document = new \DOMDocument();
+
         if (!$document->load($file)) {
-            throw new \Exception('File "' . $file . '" can not be loaded as XML');
+            throw new XmlException('File "' . $file . '" can not be loaded as XML');
         }
 
         return $document;
