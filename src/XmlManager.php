@@ -4,6 +4,9 @@ namespace JunitReports;
 
 use JunitReports\Exception\XmlException;
 
+/**
+ * Мененджемент junit xml отчётов.
+ */
 class XmlManager
 {
 
@@ -78,8 +81,6 @@ class XmlManager
         $resultFile  = null;
 
         foreach ($files as $file) {
-            //$this->printTaskInfo("Processing $file");
-
             if (!$resultFile) {
                 $resultFile = $file;
             }

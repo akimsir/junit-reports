@@ -1,5 +1,8 @@
 {
     "version":     "1.0.0",
+    "name":        "akimsir/junit-reports",
+    "type":        "library",
+    "description": "Manager junit tests reports for PHP",
     "autoload":    {
         "psr-4": {
             "JunitReports\\": "src/"
