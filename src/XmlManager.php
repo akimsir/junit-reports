@@ -51,17 +51,24 @@ class XmlManager
 
     /**
      * @param string $file
+     * @param string $cutPrefix
      *
      * @return array
      */
-    public function getFailedTests($file)
+    public function getFailedTests($file, $cutPrefix = '')
     {
         $document   = $this->loadXmlFile($file);
         $suiteNodes = (new \DOMXPath($document))->query('//testsuites/testsuite/testcase/failure');
         $result     = [];
 
         foreach ($suiteNodes as $suiteNode) {
-            $result[] = $suiteNode->parentNode->getAttribute('file') . ':' . $suiteNode->parentNode->getAttribute('name');
+            $fileName = $suiteNode->parentNode->getAttribute('file');
+
+            if ($cutPrefix) {
+                $fileName = str_replace($cutPrefix, '', $fileName);
+            }
+
+            $result[] = $fileName . ':' . $suiteNode->parentNode->getAttribute('name');
         }
 
         return $result;
