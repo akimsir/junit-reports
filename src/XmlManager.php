@@ -58,7 +58,9 @@ class XmlManager
     public function getFailedTests($file, $cutPrefix = '')
     {
         $document   = $this->loadXmlFile($file);
-        $suiteNodes = (new \DOMXPath($document))->query('//testsuites/testsuite/testcase/failure');
+        $suiteNodes = (new \DOMXPath($document))->query(
+            '//testsuites/testsuite/testcase/failure|//testsuites/testsuite/testcase/error'
+        );
         $result     = [];
 
         foreach ($suiteNodes as $suiteNode) {
