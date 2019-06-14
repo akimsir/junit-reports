@@ -72,8 +72,8 @@ class XmlManager
 
             $result[] = $fileName . ':' . $suiteNode->parentNode->getAttribute('name');
         }
-
-        return $result;
+        
+        return array_unique($result);
     }
 
     /**
