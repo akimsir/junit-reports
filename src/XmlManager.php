@@ -69,7 +69,7 @@ class XmlManager
 
             $result[] = $fileName . ':' . $case->getName();
         }
-        
+
         return $result;
     }
 
