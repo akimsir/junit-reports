@@ -50,29 +50,46 @@ class XmlManager
     }
 
     /**
-     * @param string $file
-     * @param string $cutPrefix
-     *
-     * @return array
+     * @param  string                               $file
+     * @param  string                               $cutPrefix
+     * @return string[]
+     * @throws \JunitReports\Exception\XmlException
      */
     public function getFailedTests($file, $cutPrefix = '')
     {
-        $document   = $this->loadXmlFile($file);
-        $suiteNodes = (new \DOMXPath($document))->query(
-            '//testsuites/testsuite/testcase/failure|//testsuites/testsuite/testcase/error'
-        );
-        $result     = [];
+        $testCases = $this->getFailedTestCases($file);
+        $result    = [];
 
-        foreach ($suiteNodes as $suiteNode) {
-            $fileName = $suiteNode->parentNode->getAttribute('file');
+        foreach ($testCases as $case) {
+            $fileName = $case->getFile();
 
             if ($cutPrefix) {
                 $fileName = str_replace($cutPrefix, '', $fileName);
             }
 
-            $result[] = $fileName . ':' . $suiteNode->parentNode->getAttribute('name');
+            $result[] = $fileName . ':' . $case->getName();
         }
         
+        return $result;
+    }
+
+    /**
+     * @param  string                               $file
+     * @return TestCase[]
+     * @throws \JunitReports\Exception\XmlException
+     */
+    public function getFailedTestCases($file)
+    {
+        $document   = $this->loadXmlFile($file);
+        $suiteNodes = (new \DOMXPath($document))
+            ->query('//testsuites/testsuite/testcase/failure|//testsuites/testsuite/testcase/error');
+        $result     = [];
+
+        foreach ($suiteNodes as $suiteNode) {
+            $testCase = TestCase::fromDomNode($suiteNode->parentNode);
+            $result[$testCase->getMethodOfTest()] = $testCase;
+        }
+
         return array_unique($result);
     }
 
