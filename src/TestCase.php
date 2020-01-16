@@ -148,12 +148,12 @@ class TestCase
     }
 
     /**
-     * @param string $cutPrefix
+     * @param string $cutStr
      * @return string
      */
-    public function getRunTestArgument(string $cutPrefix = ''): string
+    public function getRunTestArgument(string $cutStr = ''): string
     {
-        return str_replace($cutPrefix, '', sprintf('%s:%s', $this->getFile(), $this->getName()));
+        return str_replace($cutStr, '', sprintf('%s:%s', $this->getFile(), $this->getName()));
     }
 
     /**
