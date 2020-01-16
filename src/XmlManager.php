@@ -87,7 +87,7 @@ class XmlManager
 
         foreach ($suiteNodes as $suiteNode) {
             $testCase = TestCase::fromDomNode($suiteNode->parentNode);
-            $result[$testCase->getMethodOfTest()] = $testCase;
+            $result[$testCase->getRunTestArgument()] = $testCase;
         }
 
         return $result;
