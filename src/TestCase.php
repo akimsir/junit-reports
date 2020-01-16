@@ -24,14 +24,14 @@ class TestCase
     private $feature;
 
     /**
-     * @var string
+     * @var int
      */
-    protected $assertions;
+    protected $assertions = 0;
 
     /**
-     * @var string
+     * @var float
      */
-    private $time;
+    private $time = 0;
 
     /**
      * @return string
@@ -42,7 +42,7 @@ class TestCase
     }
 
     /**
-     * @param  string $file
+     * @param string $file
      * @return $this
      */
     public function setFile(string $file)
@@ -61,7 +61,7 @@ class TestCase
     }
 
     /**
-     * @param  string $name
+     * @param string $name
      * @return $this
      */
     public function setName(string $name)
@@ -80,7 +80,7 @@ class TestCase
     }
 
     /**
-     * @param  string $class
+     * @param string $class
      * @return $this
      */
     public function setClass(string $class)
@@ -99,7 +99,7 @@ class TestCase
     }
 
     /**
-     * @param  string $feature
+     * @param string $feature
      * @return $this
      */
     public function setFeature(string $feature)
@@ -110,18 +110,18 @@ class TestCase
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getAssertions(): string
+    public function getAssertions(): int
     {
         return $this->assertions;
     }
 
     /**
-     * @param  string $assertions
+     * @param int $assertions
      * @return $this
      */
-    public function setAssertions(string $assertions)
+    public function setAssertions(int $assertions)
     {
         $this->assertions = $assertions;
 
@@ -129,18 +129,18 @@ class TestCase
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getTime(): string
+    public function getTime(): float
     {
         return $this->time;
     }
 
     /**
-     * @param  string $time
+     * @param float $time
      * @return $this
      */
-    public function setTime(string $time)
+    public function setTime(float $time)
     {
         $this->time = $time;
 
@@ -148,23 +148,28 @@ class TestCase
     }
 
     /**
+     * @param string $cutPrefix
      * @return string
      */
-    public function getMethodOfTest(): string
+    public function getRunTestArgument(string $cutPrefix = ''): string
     {
-        return sprintf('%s:%s', $this->getClass(), $this->getName());
+        return str_replace($cutPrefix, '', sprintf('%s:%s', $this->getFile(), $this->getName()));
     }
 
+    /**
+     * @param \DOMNode $node
+     * @return \JunitReports\TestCase
+     */
     public static function fromDomNode(\DOMNode $node)
     {
         $testCase = new self();
         $testCase
-            ->setAssertions($node->getAttribute('assertions'))
+            ->setAssertions((int) $node->getAttribute('assertions'))
             ->setClass($node->getAttribute('class'))
             ->setFeature($node->getAttribute('feature'))
             ->setFile($node->getAttribute('file'))
             ->setName($node->getAttribute('name'))
-            ->setTime($node->getAttribute('time'));
+            ->setTime((float) $node->getAttribute('time'));
 
         return $testCase;
     }
