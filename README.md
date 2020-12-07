@@ -47,6 +47,7 @@ $manager->mergeWithReplace('all_results.xml', 'rerunfailed.xml');
 ### Run with Docker
 
 docker pull akimsir/junit-reports
+
 docker run -ti --rm  -v /path/to/results.xml:/project/results.xml akimsir/junit-reports "php run.php getFailedTestCasesAsJson /project/results.xml"
 
 Result is the list of failed tests with parameters:
