@@ -1,5 +1,7 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/src/XmlManager.php';
+require __DIR__ . '/src/TestCase.php';
+require __DIR__ . '/src/Exception/XmlException.php';
 
 if (!isset($argv[1])) {
     die('Нужно указать команду');
