@@ -157,6 +157,21 @@ class TestCase
     }
 
     /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'file'       => $this->file,
+            'name'       => $this->name,
+            'class'      => $this->class,
+            'feature'    => $this->feature,
+            'assertions' => $this->assertions,
+            'time'       => $this->time,
+        ];
+    }
+
+    /**
      * @param \DOMNode $node
      * @return \JunitReports\TestCase
      */

@@ -43,3 +43,5 @@ $this->parallelRun(['rerunfailed' => []], 'Rerun failed tests');
 // merge results with replace 
 $manager->mergeWithReplace('all_results.xml', 'rerunfailed.xml');
 ```
+
+### Run with Docker

@@ -94,6 +94,23 @@ class XmlManager
     }
 
     /**
+     * @param \JunitReports\string $file
+     * @return array
+     * @throws \JunitReports\Exception\XmlException
+     */
+    public function getFailedTestCasesAsArray(string $file): array
+    {
+        $result = [];
+        $cases  = $this->getFailedTestCases($file);
+
+        foreach ($cases as $case) {
+            $result[] = $case->toArray();
+        }
+
+        return $result;
+    }
+
+    /**
      * Мержит первый файл с остальными. Результатом будет первый файл содержащий в себе другие файлы.
      *
      * @param array ...$files
