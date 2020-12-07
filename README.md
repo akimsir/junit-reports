@@ -45,3 +45,21 @@ $manager->mergeWithReplace('all_results.xml', 'rerunfailed.xml');
 ```
 
 ### Run with Docker
+
+docker pull akimsir/junit-reports
+docker run -ti --rm  -v /path/to/results.xml:/project/results.xml akimsir/junit-reports "php run.php getFailedTestCasesAsJson /project/results.xml"
+
+Result is the list of failed tests with parameters:
+
+```
+[
+    {
+        "file": "/code/Tests/functional/Backend/VerifiedCest.php", 
+        "name": "acceptRequest", 
+        "class": "Tests\\Functional\\Backend\\VerifiedCest", 
+        "feature": "Одобрить заявку для компании", 
+        "assertions": 17, 
+        "time": 28.493741
+    }
+]
+```
